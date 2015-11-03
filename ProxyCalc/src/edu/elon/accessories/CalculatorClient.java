@@ -22,12 +22,14 @@ public class CalculatorClient extends JFrame{
 	private String input;
 	private String op;
 	private boolean isResult;
+	Calculator implement;
 
-	public CalculatorClient() {
+	public CalculatorClient(Calculator imp) {
 		isResult = false;
-		input = "0";
+		input = "";
 		total = 0.0;
 		op = "";
+		implement = imp;
 
 	}
 
@@ -43,23 +45,26 @@ public class CalculatorClient extends JFrame{
 			Context namingContext = new InitialContext();
 			Calculator imp = (Calculator) namingContext.lookup(url+"calculations");
 			
-			createPane(imp);
+			CalculatorClient gui = new CalculatorClient(imp);
+			gui.createPane(gui.implement);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 	}
 
-	public void createPane(CalculatorImpl imp) {
+	public void createPane(Calculator implement2) {
 		frame = new JFrame(); 
 		displayField = new JTextField(input);
-		buttonPanel = createButtons(imp);
+		buttonPanel = createButtons(implement2);
 		JPanel main = new JPanel(new GridLayout(2, 0));
 		main.add(displayField);
 		main.add(buttonPanel);
 		frame.add(main);
+		frame.pack();
+		frame.setVisible(true);
 	}
 
-	public JPanel createButtons(CalculatorImpl imp) {
+	public JPanel createButtons(Calculator implement2) {
 		JPanel panel = new JPanel(new GridLayout(4, 4));
 
 		JButton button0 = new JButton("0");
@@ -266,7 +271,7 @@ public class CalculatorClient extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					imp.runCalcs(op, input, total);
+					total = implement2.runCalcs(op, input, total);
 				} catch (RemoteException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -291,7 +296,7 @@ public class CalculatorClient extends JFrame{
 						System.out.println(total);
 					} else {
 						try {
-							imp.runCalcs(op, input, total);
+							total = implement2.runCalcs(op, input, total);
 						} catch (RemoteException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -315,7 +320,7 @@ public class CalculatorClient extends JFrame{
 						total = Double.parseDouble(input);
 					} else {
 						try {
-							imp.runCalcs(op, input, total);
+							total = implement2.runCalcs(op, input, total);
 						} catch (RemoteException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -339,7 +344,7 @@ public class CalculatorClient extends JFrame{
 						total = Double.parseDouble(input);
 					} else {
 						try {
-							imp.runCalcs(op, input, total);
+							total = implement2.runCalcs(op, input, total);
 						} catch (RemoteException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -363,7 +368,7 @@ public class CalculatorClient extends JFrame{
 						total = Double.parseDouble(input);
 					} else {
 						try {
-							imp.runCalcs(op, input, total);
+							total = implement2.runCalcs(op, input, total);
 						} catch (RemoteException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
