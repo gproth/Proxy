@@ -4,9 +4,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class CalculatorImpl extends UnicastRemoteObject implements Calculator{
-	
-	protected CalculatorImpl() throws RemoteException {
+	private String name;
+	protected CalculatorImpl(String n) throws RemoteException {
 		super();
+		name = n;
 		// TODO Auto-generated constructor stub
 	}
 	@Override

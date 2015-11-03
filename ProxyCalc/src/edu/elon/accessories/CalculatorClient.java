@@ -4,7 +4,10 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,19 +34,32 @@ public class CalculatorClient extends JFrame{
 	public static void main(String[] args) {
 		System.setProperty("java.security.policy",  "client.policy");
 		System.setSecurityManager(new SecurityManager());
+		String url = "rmi://localhost/";
+		if (args.length == 1){
+			url = "rmi://" + args[0] + "/";
+		}
+		
+		try{
+			Context namingContext = new InitialContext();
+			Calculator imp = (Calculator) namingContext.lookup(url+"calculations");
+			
+			createPane(imp);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
-	public void createPane() {
+	public void createPane(CalculatorImpl imp) {
 		frame = new JFrame(); 
 		displayField = new JTextField(input);
-		buttonPanel = createButtons();
+		buttonPanel = createButtons(imp);
 		JPanel main = new JPanel(new GridLayout(2, 0));
 		main.add(displayField);
 		main.add(buttonPanel);
 		frame.add(main);
 	}
 
-	public JPanel createButtons() {
+	public JPanel createButtons(CalculatorImpl imp) {
 		JPanel panel = new JPanel(new GridLayout(4, 4));
 
 		JButton button0 = new JButton("0");
@@ -249,7 +265,12 @@ public class CalculatorClient extends JFrame{
 		buttonEquals.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				runCalcs();
+				try {
+					imp.runCalcs(op, input, total);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				displayField.setText("" + total);
 				op = "";
 				isResult = true;
@@ -269,7 +290,12 @@ public class CalculatorClient extends JFrame{
 						total = Double.parseDouble(input);
 						System.out.println(total);
 					} else {
-						runCalcs();
+						try {
+							imp.runCalcs(op, input, total);
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 					op = "+";
 					input = "";
@@ -288,7 +314,12 @@ public class CalculatorClient extends JFrame{
 					if (total == 0.0) {
 						total = Double.parseDouble(input);
 					} else {
-						runCalcs();
+						try {
+							imp.runCalcs(op, input, total);
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 					op = "-";
 					input = "";
@@ -307,7 +338,12 @@ public class CalculatorClient extends JFrame{
 					if (total == 0.0) {
 						total = Double.parseDouble(input);
 					} else {
-						runCalcs();
+						try {
+							imp.runCalcs(op, input, total);
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 					op = "/";
 					input = "";
@@ -326,7 +362,12 @@ public class CalculatorClient extends JFrame{
 					if (total == 0.0) {
 						total = Double.parseDouble(input);
 					} else {
-						runCalcs();
+						try {
+							imp.runCalcs(op, input, total);
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 					}
 					op = "*";
 					input = "";
